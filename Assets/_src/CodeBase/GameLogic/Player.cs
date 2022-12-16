@@ -11,6 +11,7 @@ namespace _src.CodeBase.GameLogic {
 
         public static Player localPlayer;
         [SyncVar] public string matchID;
+        [SyncVar] public string PlayerName;
         [SyncVar] public int playerIndex;
 
         NetworkMatch networkMatch;
@@ -50,28 +51,29 @@ namespace _src.CodeBase.GameLogic {
             HOST MATCH
         */
 
-        public void HostGame (bool publicMatch) {
+        public void HostGame(bool publicMatch, string playerName) {
             string matchID = MatchMaker.GetRandomMatchID ();
-            CmdHostGame (matchID, publicMatch);
+            CmdHostGame (matchID, publicMatch, playerName);
         }
 
         [Command]
-        void CmdHostGame (string _matchID, bool publicMatch) {
+        void CmdHostGame(string _matchID, bool publicMatch, string playerName) {
             matchID = _matchID;
-            if (MatchMaker.instance.HostGame (_matchID, this, publicMatch, out playerIndex)) {
+            if (MatchMaker.instance.HostGame (_matchID, this, publicMatch, out playerIndex, playerName)) {
                 Debug.Log ($"<color=green>Game hosted successfully</color>");
                 networkMatch.matchId = _matchID.ToGuid ();
-                TargetHostGame (true, _matchID, playerIndex);
+                TargetHostGame (true, _matchID, playerIndex, playerName);
             } else {
                 Debug.Log ($"<color=red>Game hosted failed</color>");
-                TargetHostGame (false, _matchID, playerIndex);
+                TargetHostGame (false, _matchID, playerIndex, "");
             }
         }
 
         [TargetRpc]
-        void TargetHostGame (bool success, string _matchID, int _playerIndex) {
+        void TargetHostGame(bool success, string _matchID, int _playerIndex, string _playerName) {
             playerIndex = _playerIndex;
             matchID = _matchID;
+            PlayerName = _playerName;
             Debug.Log ($"MatchID: {matchID} == {_matchID}");
             UILobby.instance.HostSuccess (success, _matchID);
         }
@@ -80,27 +82,28 @@ namespace _src.CodeBase.GameLogic {
             JOIN MATCH
         */
 
-        public void JoinGame (string _inputID) {
-            CmdJoinGame (_inputID);
+        public void JoinGame(string matchId, string playerName) {
+            CmdJoinGame (matchId, playerName);
         }
 
         [Command]
-        void CmdJoinGame (string _matchID) {
-            matchID = _matchID;
-            if (MatchMaker.instance.JoinGame (_matchID, this, out playerIndex)) {
+        void CmdJoinGame(string matchId, string playerName) {
+            matchID = matchId;
+            if (MatchMaker.instance.JoinGame (matchId, this, out playerIndex, playerName)) {
                 Debug.Log ($"<color=green>Game Joined successfully</color>");
-                networkMatch.matchId = _matchID.ToGuid ();
-                TargetJoinGame (true, _matchID, playerIndex);
+                networkMatch.matchId = matchId.ToGuid ();
+                TargetJoinGame (true, matchId, playerIndex, playerName);
             } else {
                 Debug.Log ($"<color=red>Game Joined failed</color>");
-                TargetJoinGame (false, _matchID, playerIndex);
+                TargetJoinGame (false, matchId, playerIndex, playerName);
             }
         }
 
         [TargetRpc]
-        void TargetJoinGame (bool success, string _matchID, int _playerIndex) {
+        void TargetJoinGame(bool success, string _matchID, int _playerIndex, string _playerName) {
             playerIndex = _playerIndex;
             matchID = _matchID;
+            PlayerName = _playerName;
             Debug.Log ($"MatchID: {matchID} == {_matchID}");
             UILobby.instance.JoinSuccess (success, _matchID);
         }

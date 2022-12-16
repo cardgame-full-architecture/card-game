@@ -1,4 +1,5 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
@@ -9,7 +10,8 @@ namespace _src.CodeBase.UI {
 
         public static UILobby instance;
 
-        [Header ("Host Join")]
+        [Header("Host Join")] 
+        [SerializeField] private InputField playerNameInput;
         [SerializeField] InputField joinMatchInput;
         [SerializeField] List<Selectable> lobbySelectables = new List<Selectable> ();
         [SerializeField] Canvas lobbyCanvas;
@@ -28,16 +30,26 @@ namespace _src.CodeBase.UI {
             instance = this;
         }
 
-        public void HostPublic () {
+        public void HostPublic ()
+        {
+            string playerName = playerNameInput.text;
+            if (playerName == String.Empty)
+                return;
+            
             lobbySelectables.ForEach (x => x.interactable = false);
 
-            GameLogic.Player.localPlayer.HostGame (true);
+            GameLogic.Player.localPlayer.HostGame (true, playerName);
         }
 
-        public void HostPrivate () {
+        public void HostPrivate ()
+        {
+            string playerName = playerNameInput.text;
+            if (playerName == String.Empty)
+                return;
+
             lobbySelectables.ForEach (x => x.interactable = false);
 
-            GameLogic.Player.localPlayer.HostGame (false);
+            GameLogic.Player.localPlayer.HostGame (false, playerName);
         }
 
         public void HostSuccess (bool success, string matchID) {
@@ -54,9 +66,13 @@ namespace _src.CodeBase.UI {
         }
 
         public void Join () {
+            string playerName = playerNameInput.text;
+            if (playerName == String.Empty)
+                return;
+            
             lobbySelectables.ForEach (x => x.interactable = false);
 
-            GameLogic.Player.localPlayer.JoinGame (joinMatchInput.text.ToUpper ());
+            GameLogic.Player.localPlayer.JoinGame (joinMatchInput.text.ToUpper (), playerName);
         }
 
         public void JoinSuccess (bool success, string matchID) {

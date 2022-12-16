@@ -40,7 +40,7 @@ namespace _src.CodeBase.Net {
             instance = this;
         }
 
-        public bool HostGame (string _matchID, GameLogic.Player _player, bool publicMatch, out int playerIndex) {
+        public bool HostGame(string _matchID, GameLogic.Player _player, bool publicMatch, out int playerIndex, string playerName) {
             playerIndex = -1;
 
             if (!matchIDs.Contains (_matchID)) {
@@ -49,6 +49,7 @@ namespace _src.CodeBase.Net {
                 matches.Add (match);
                 Debug.Log ($"Match generated");
                 _player.currentMatch = match;
+                _player.PlayerName = playerName;
                 playerIndex = 1;
                 return true;
             } else {
@@ -57,7 +58,7 @@ namespace _src.CodeBase.Net {
             }
         }
 
-        public bool JoinGame (string _matchID, GameLogic.Player _player, out int playerIndex) {
+        public bool JoinGame(string _matchID, GameLogic.Player player, out int playerIndex, string playerName) {
             playerIndex = -1;
 
             if (matchIDs.Contains (_matchID)) {
@@ -65,8 +66,9 @@ namespace _src.CodeBase.Net {
                 for (int i = 0; i < matches.Count; i++) {
                     if (matches[i].matchID == _matchID) {
                         if (!matches[i].inMatch && !matches[i].matchFull) {
-                            matches[i].players.Add (_player);
-                            _player.currentMatch = matches[i];
+                            matches[i].players.Add (player);
+                            player.currentMatch = matches[i];
+                            player.PlayerName = playerName;
                             playerIndex = matches[i].players.Count;
 
                             if (matches[i].players.Count == maxMatchPlayers) {
@@ -95,7 +97,7 @@ namespace _src.CodeBase.Net {
             for (int i = 0; i < matches.Count; i++) {
                 Debug.Log ($"Checking match {matches[i].matchID} | inMatch {matches[i].inMatch} | matchFull {matches[i].matchFull} | publicMatch {matches[i].publicMatch}");
                 if (!matches[i].inMatch && !matches[i].matchFull && matches[i].publicMatch) {
-                    if (JoinGame (matches[i].matchID, _player, out playerIndex)) {
+                    if (JoinGame (matches[i].matchID, _player, out playerIndex, "some name")) {
                         matchID = matches[i].matchID;
                         return true;
                     }
