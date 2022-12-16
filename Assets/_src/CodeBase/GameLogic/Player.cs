@@ -1,8 +1,10 @@
-﻿using _src.CodeBase.Net;
+﻿using _src.CodeBase.Data;
+using _src.CodeBase.Net;
 using _src.CodeBase.UI;
 using Mirror;
 using UnityEngine;
 using UnityEngine.SceneManagement;
+using UnityEngine.UI;
 
 namespace _src.CodeBase.GameLogic {
 
@@ -20,6 +22,10 @@ namespace _src.CodeBase.GameLogic {
 
         [SerializeField] GameObject playerLobbyUI;
         [SerializeField] GameObject canvas;
+        [SerializeField] private Image _memImage;
+
+        [SerializeField] 
+        private ImagesData _imagesData;
 
         public bool myTurn { get; private set; }
 
@@ -230,5 +236,10 @@ namespace _src.CodeBase.GameLogic {
             Debug.Log ($"{(isLocalPlayer ? "localPlayer" : "other player")} is doing something.");
         }
 
+        [TargetRpc]
+        public void SetImage(int imageIndex)
+        {
+            _memImage.sprite = _imagesData.SpritesImages[imageIndex];
+        }
     }
 }
