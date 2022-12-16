@@ -10,8 +10,8 @@ GameObject:
   m_Component:
   - component: {fileID: 8698590402008623970}
   - component: {fileID: 8709515120416496910}
-  - component: {fileID: -5610219360305197340}
   - component: {fileID: -1794338971351480948}
+  - component: {fileID: 5135470696307260264}
   m_Layer: 0
   m_Name: Player
   m_TagString: Untagged
@@ -49,31 +49,8 @@ MonoBehaviour:
   sceneId: 0
   serverOnly: 0
   visible: 0
-  m_AssetId: 534d7bd2e05cffa46a270924b194b67a
+  m_AssetId: 06d2220c87fd6054e840b14b0028a2e4
   hasSpawned: 0
---- !u!114 &-5610219360305197340
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1093037038611221156}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 327cdd1d6e3e05f47a30c69dd89314c5, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  syncMode: 0
-  syncInterval: 0
-  matchID: 
-  playerIndex: 0
-  currentMatch:
-    matchID: 
-    publicMatch: 0
-    inMatch: 0
-    matchFull: 0
-  playerLobbyUI: {fileID: 0}
-  canvas: {fileID: 6222160310028905165}
 --- !u!114 &-1794338971351480948
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -88,6 +65,30 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   syncMode: 0
   syncInterval: 0.1
+--- !u!114 &5135470696307260264
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1093037038611221156}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: da61ca6249e27644b8d3518ba1ffef7b, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  syncMode: 0
+  syncInterval: 0.1
+  matchID: 
+  playerIndex: 0
+  currentMatch:
+    matchID: 
+    publicMatch: 0
+    inMatch: 0
+    matchFull: 0
+    players: []
+  playerLobbyUI: {fileID: 0}
+  canvas: {fileID: 6222160310028905165}
 --- !u!1 &4569009069244686922
 GameObject:
   m_ObjectHideFlags: 0
@@ -148,6 +149,7 @@ MonoBehaviour:
   m_Material: {fileID: 0}
   m_Color: {r: 0.19607843, g: 0.19607843, b: 0.19607843, a: 1}
   m_RaycastTarget: 1
+  m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
   m_Maskable: 1
   m_OnCullStateChanged:
     m_PersistentCalls:
@@ -248,6 +250,7 @@ MonoBehaviour:
   m_FallbackScreenDPI: 96
   m_DefaultSpriteDPI: 96
   m_DynamicPixelsPerUnit: 1
+  m_PresetInfoIsWorld: 0
 --- !u!114 &5450103836293447449
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -328,6 +331,7 @@ MonoBehaviour:
   m_Material: {fileID: 0}
   m_Color: {r: 1, g: 0.8223805, b: 0.36320752, a: 1}
   m_RaycastTarget: 1
+  m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
   m_Maskable: 1
   m_OnCullStateChanged:
     m_PersistentCalls:
@@ -356,6 +360,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   m_Navigation:
     m_Mode: 3
+    m_WrapAround: 0
     m_SelectOnUp: {fileID: 0}
     m_SelectOnDown: {fileID: 0}
     m_SelectOnLeft: {fileID: 0}
@@ -385,7 +390,8 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: -5610219360305197340}
+      - m_Target: {fileID: 0}
+        m_TargetAssemblyTypeName: 
         m_MethodName: DoSomething
         m_Mode: 1
         m_Arguments:

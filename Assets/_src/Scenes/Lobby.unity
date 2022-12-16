@@ -2372,7 +2372,6 @@ GameObject:
   - component: {fileID: 1618227327}
   - component: {fileID: 1618227326}
   - component: {fileID: 1618227325}
-  - component: {fileID: 1618227328}
   m_Layer: 0
   m_Name: --- MatchMaker
   m_TagString: Untagged
@@ -2389,11 +2388,12 @@ MonoBehaviour:
   m_GameObject: {fileID: 1618227324}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 80f1d087d4904484eb9b21506ed924da, type: 3}
+  m_Script: {fileID: 11500000, guid: 2f9be4bc44fde09478cecb567224e12b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   syncMode: 0
-  syncInterval: 0
+  syncInterval: 0.1
+  turnManagerPrefab: {fileID: 4895240014894701960, guid: 8fb15e37caeab8041a52ff1f50295f8a, type: 3}
   maxMatchPlayers: 12
 --- !u!114 &1618227326
 MonoBehaviour:
@@ -2426,22 +2426,6 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 2
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &1618227328
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1618227324}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: d7b76ac16a3e1ef479e0a6c8ab95a508, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  syncMode: 0
-  syncInterval: 0
-  turnManagerPrefab: {fileID: 4895240014894701960, guid: 8fb15e37caeab8041a52ff1f50295f8a, type: 3}
-  maxMatchPlayers: 12
 --- !u!1 &1660367471
 GameObject:
   m_ObjectHideFlags: 0
@@ -3516,7 +3500,7 @@ MonoBehaviour:
   m_GameObject: {fileID: 2091797235}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 9e5cabe4ed41cd74d9a3979f1da7f77b, type: 3}
+  m_Script: {fileID: 11500000, guid: 3db573a68336ffa4487d8cf3487144b6, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   joinMatchInput: {fileID: 1149600214}
