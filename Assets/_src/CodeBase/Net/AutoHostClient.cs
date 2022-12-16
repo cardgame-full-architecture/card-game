@@ -12,11 +12,12 @@ namespace _src.CodeBase.Net {
                 networkManager.StartClient ();
             } else {
                 Debug.Log ($"=== Server Build ===");
+                Debug.Log(networkManager.networkAddress);
             }
         }
 
         public void JoinLocal () {
-            networkManager.networkAddress = "localhost";
+            networkManager.networkAddress = "192.168.1.110";
             networkManager.StartClient ();
         }
     }
