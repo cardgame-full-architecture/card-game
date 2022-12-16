@@ -6,12 +6,12 @@ EditorBuildSettings:
   serializedVersion: 2
   m_Scenes:
   - enabled: 1
-    path: Assets/_PROJECTS/Turnbased/Scenes/Offline.unity
-    guid: a4bf0fd24ba08664fb6b050e9c8523df
+    path: Assets/_src/Scenes/Offline.unity
+    guid: 4f0ba322540c84345b6d7baada579ee8
   - enabled: 1
-    path: Assets/_PROJECTS/Turnbased/Scenes/Lobby.unity
-    guid: b1732771fb94ab04abfd0647221e9b18
+    path: Assets/_src/Scenes/Lobby.unity
+    guid: 951365a89fde5f74688c61c621c56d87
   - enabled: 1
-    path: Assets/_PROJECTS/Turnbased/Scenes/Game.unity
-    guid: 6e6ca684485504848bc44466f9fadefd
+    path: Assets/_src/Scenes/Game.unity
+    guid: 46407ec537abeca42ad41b440c958970
   m_configObjects: {}
