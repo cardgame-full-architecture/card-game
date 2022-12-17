@@ -40,6 +40,9 @@ namespace _src.CodeBase.GameLogic {
         private VariantButton _variantButtonPrefab;
 
         [SerializeField] 
+        private TextMeshProUGUI _playerScoreText;
+
+        [SerializeField] 
         private ImagesData _imagesData;
 
 
@@ -315,8 +318,47 @@ namespace _src.CodeBase.GameLogic {
 
         private void OnClickVariantButton()
         {
-            foreach (VariantButton variantButton in _spawnedVariantButtons) 
+            string selectedVariantText = "";
+            foreach (VariantButton variantButton in _spawnedVariantButtons)
+            {
+                if (variantButton.IsSelected)
+                    selectedVariantText = variantButton.VariantText;
+
                 variantButton.SetUnselectable();
+            } 
+
+            CmdSendSelectedVariant(selectedVariantText);
+        }
+
+        [Command]
+        private void CmdSendSelectedVariant(string variantText)
+        {
+            TurnManager.instance.SelectVariant(variantText);
+        }
+
+        [TargetRpc]
+        public void ActivatePlayerScore()
+        {
+            _playerScoreText.gameObject.SetActive(true);
+            _playerScoreText.text = $"Score: {0}";
+        }
+
+        [TargetRpc]
+        public void UpdateScore(int score)
+        {
+            RemoveAllVariableButtons();
+
+            _playerScoreText.text = $"Score: {score.ToString()}";
+        }
+
+        private void RemoveAllVariableButtons()
+        {
+            int countOfVariableButtons = _spawnedVariantButtons.Count;
+            for (int i = 0; i < countOfVariableButtons; i++)
+            {
+                Destroy(_spawnedVariantButtons[0].gameObject);
+                _spawnedVariantButtons.RemoveAt(0);
+            }
         }
     }
 }

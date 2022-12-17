@@ -1,9 +1,7 @@
-﻿using System;
-using System.Collections;
+﻿using System.Collections;
 using System.Collections.Generic;
 using _src.CodeBase.Data;
 using _src.CodeBase.Net;
-using Mirror;
 using UnityEngine;
 using Random = UnityEngine.Random;
 
@@ -17,8 +15,12 @@ namespace _src.CodeBase.GameLogic {
 
         public static TurnManager instance;
         private MatchMaker _matchMaker;
+        
         private int _countOfAnsweredUsers;
         private Dictionary<Player, string> _playersMessages;
+
+        private int _countOfUsersVotes;
+        private Dictionary<Player, int> _playersScores;
 
         void Start () {
             instance = this;
@@ -44,9 +46,29 @@ namespace _src.CodeBase.GameLogic {
             _playersMessages.Add(player, message);
             player.AcceptAnswer();
         }
+        
+        public void SelectVariant(string variantText)
+        {
+            _countOfUsersVotes++;
+
+            foreach (KeyValuePair<Player,string> playersMessage in _playersMessages)
+            {
+                if (playersMessage.Value == variantText)
+                {
+                    if (_playersScores.ContainsKey(playersMessage.Key))
+                        _playersScores[playersMessage.Key]++;
+                    else
+                        _playersScores.Add(playersMessage.Key, 1);
+                }
+            }
+        }
 
         private IEnumerator GameLoopRoutine()
         {
+            _playersScores = new Dictionary<Player, int>();
+            foreach (Player player in players) 
+                player.ActivatePlayerScore();
+
             while (true)
             {
                 ChangeImage();
@@ -82,6 +104,8 @@ namespace _src.CodeBase.GameLogic {
 
         private IEnumerator WaitUsersVotesRoutine()
         {
+            _countOfUsersVotes = 0;
+            
             foreach (Player player in players)
             {
                 foreach (KeyValuePair<Player, string> playersMessage in _playersMessages)
@@ -91,23 +115,17 @@ namespace _src.CodeBase.GameLogic {
                 }
             }
             
-            yield return new WaitForSeconds(20);
-        }
+            while (_countOfUsersVotes < players.Count)
+                yield return new WaitForSeconds(.5f);
 
-        // private IEnumerator ChangeImagesRoutine()
-        // {
-        //     while (gameInProgress)
-        //     {
-        //         int randomImageIndex = Random.Range(0, _imagesData.SpritesImages.Count);
-        //         
-        //         foreach (Player player in players)
-        //         {
-        //             player.SetImage(randomImageIndex);
-        //         }
-        //
-        //         yield return new WaitForSeconds (1);
-        //     }
-        // }
+            foreach (Player player in players)
+            {
+                if (_playersScores.ContainsKey(player)) 
+                    player.UpdateScore(_playersScores[player]);
+                else
+                    player.UpdateScore(0);
+            }
+        }
 
         private void OnPlayerDisconnected(Player player)
         {
