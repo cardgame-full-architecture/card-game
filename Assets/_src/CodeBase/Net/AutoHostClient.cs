@@ -1,5 +1,5 @@
 ﻿using System.Net;
-using System.Net.Sockets;
+using Assets.Scripts.Consul;
 using Mirror;
 using UnityEngine;
 
@@ -8,14 +8,24 @@ namespace _src.CodeBase.Net {
 
         [SerializeField] NetworkManager networkManager;
 
-        void Start () {
-            // Debug.Log(GetLocalIPAddress());
+        async void Start () {
             if (!Application.isBatchMode) { //Headless build
                 Debug.Log ($"=== Client Build ===");
-                networkManager.StartClient ();
+
+                ConsulClient consulClient = new ConsulClient();
+                foreach (ServiceEntry item in await consulClient.GetAliveServiceEntries("unityclient"))
+                    Debug.Log($"{item.Node.Name}: {item.Node.Address}, {item.Service.Address}");
+                
+                // networkManager.StartClient ();
             } else {
                 Debug.Log ($"=== Server Build ===");
-                Debug.Log(networkManager.networkAddress);
+                Debug.Log($"Server started on {networkManager.networkAddress}");
+                
+                ConsulClient consulClient = new ConsulClient("unityclient", "unityclient1", IPAddress.Parse(networkManager.networkAddress), 7777, 0);
+                if (await consulClient.RegistrationAsync())
+                {
+                    consulClient.StartPingTask();
+                }
             }
         }
 
@@ -23,19 +33,5 @@ namespace _src.CodeBase.Net {
             networkManager.networkAddress = "192.168.1.110";
             networkManager.StartClient ();
         }
-        
-        // private static string GetLocalIPAddress()
-        // {
-        //     IPAddress[] hosts = Dns.GetHostAddresses(System.Net.Dns.GetHostName());
-        //     foreach (IPAddress address in hosts)
-        //     {
-        //         if (address.AddressFamily == AddressFamily.InterNetwork)
-        //         {
-        //             Debug.Log(address.ToString());
-        //         }
-        //     }
-        //
-        //     return "";
-        // }
     }
 }
