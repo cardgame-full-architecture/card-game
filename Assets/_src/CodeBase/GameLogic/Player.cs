@@ -1,7 +1,10 @@
-﻿using _src.CodeBase.Data;
+﻿using System;
+using System.Collections.Generic;
+using _src.CodeBase.Data;
 using _src.CodeBase.Net;
 using _src.CodeBase.UI;
 using Mirror;
+using TMPro;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 using UnityEngine.UI;
@@ -25,13 +28,33 @@ namespace _src.CodeBase.GameLogic {
         [SerializeField] private Image _memImage;
 
         [SerializeField] 
+        private TMP_InputField _inputField;
+
+        [SerializeField] 
+        private Button _sendButton;
+
+        [SerializeField] 
+        private Transform _variantsPanel;
+
+        [SerializeField] 
+        private VariantButton _variantButtonPrefab;
+
+        [SerializeField] 
         private ImagesData _imagesData;
+
+
+        private List<VariantButton> _spawnedVariantButtons;
+        
 
         public bool myTurn { get; private set; }
 
         void Awake () {
             networkMatch = GetComponent<NetworkMatch> ();
+            _spawnedVariantButtons = new List<VariantButton>();
         }
+
+        private void Start() => 
+            _sendButton.onClick.AddListener(SendMessage);
 
         public override void OnStartClient () {
             if (isLocalPlayer) {
@@ -226,6 +249,17 @@ namespace _src.CodeBase.GameLogic {
             }
         }
 
+        private void SendMessage()
+        {
+            string message = _inputField.text;
+            if (message == String.Empty)
+                return;
+            
+            _sendButton.gameObject.SetActive(false);
+            
+            CmdSendMessage(message);
+        }
+
         [Command]
         void CmdDoSomething () {
             RpcDoSomething ();
@@ -239,7 +273,50 @@ namespace _src.CodeBase.GameLogic {
         [TargetRpc]
         public void SetImage(int imageIndex)
         {
+            _memImage.gameObject.SetActive(true);
             _memImage.sprite = _imagesData.SpritesImages[imageIndex];
+        }
+
+        [Command]
+        private void CmdSendMessage(string message)
+        {
+            TurnManager.instance.OnMessageSent(this, message);
+        }
+
+        [TargetRpc]
+        public void AcceptAnswer()
+        {
+            _inputField.text = "";
+            _inputField.gameObject.SetActive(false);
+        }
+
+        [TargetRpc]
+        public void ActivateAnswerTools()
+        {
+            _inputField.gameObject.SetActive(true);
+            _sendButton.gameObject.SetActive(true);
+        }
+
+        [TargetRpc]
+        public void DeactivateAnswering()
+        {
+            _memImage.gameObject.SetActive(false);
+        }
+
+        [TargetRpc]
+        public void AddUserVariant(string messageVariant)
+        {
+            VariantButton variantButtonInstance = Instantiate(_variantButtonPrefab, _variantsPanel);
+            variantButtonInstance.SetText(messageVariant);
+            variantButtonInstance.Button.onClick.AddListener(OnClickVariantButton);
+
+            _spawnedVariantButtons.Add(variantButtonInstance);
+        }
+
+        private void OnClickVariantButton()
+        {
+            foreach (VariantButton variantButton in _spawnedVariantButtons) 
+                variantButton.SetUnselectable();
         }
     }
 }

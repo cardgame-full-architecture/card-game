@@ -1,4 +1,6 @@
-﻿using Mirror;
+﻿using System.Net;
+using System.Net.Sockets;
+using Mirror;
 using UnityEngine;
 
 namespace _src.CodeBase.Net {
@@ -7,6 +9,7 @@ namespace _src.CodeBase.Net {
         [SerializeField] NetworkManager networkManager;
 
         void Start () {
+            // Debug.Log(GetLocalIPAddress());
             if (!Application.isBatchMode) { //Headless build
                 Debug.Log ($"=== Client Build ===");
                 networkManager.StartClient ();
@@ -20,5 +23,19 @@ namespace _src.CodeBase.Net {
             networkManager.networkAddress = "192.168.1.110";
             networkManager.StartClient ();
         }
+        
+        // private static string GetLocalIPAddress()
+        // {
+        //     IPAddress[] hosts = Dns.GetHostAddresses(System.Net.Dns.GetHostName());
+        //     foreach (IPAddress address in hosts)
+        //     {
+        //         if (address.AddressFamily == AddressFamily.InterNetwork)
+        //         {
+        //             Debug.Log(address.ToString());
+        //         }
+        //     }
+        //
+        //     return "";
+        // }
     }
 }

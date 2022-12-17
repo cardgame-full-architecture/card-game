@@ -1,5 +1,6 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
+using FushGame;
 using Mirror;
 using UnityEngine;
 

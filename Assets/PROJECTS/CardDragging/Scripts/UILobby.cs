@@ -13,9 +13,9 @@ namespace CardDragging {
         [SerializeField] InputField joinMatchInput;
         [SerializeField] Button joinButton;
         [SerializeField] Button hostButton;
-        [SerializeField] Button searchButton;
+        // [SerializeField] Button searchButton;
         [SerializeField] Canvas lobbyCanvas;
-        [SerializeField] Canvas searchCanvas;
+        // [SerializeField] Canvas searchCanvas;
         bool searching = false;
 
         [Header ("Lobby")]
@@ -32,7 +32,7 @@ namespace CardDragging {
             joinMatchInput.interactable = false;
             joinButton.interactable = false;
             hostButton.interactable = false;
-            searchButton.interactable = false;
+            // searchButton.interactable = false;
 
             Player.localPlayer.HostGame (true);
         }
@@ -41,7 +41,7 @@ namespace CardDragging {
             joinMatchInput.interactable = false;
             joinButton.interactable = false;
             hostButton.interactable = false;
-            searchButton.interactable = false;
+            // searchButton.interactable = false;
 
             Player.localPlayer.HostGame (false);
         }
@@ -57,7 +57,7 @@ namespace CardDragging {
                 joinMatchInput.interactable = true;
                 joinButton.interactable = true;
                 hostButton.interactable = true;
-                searchButton.interactable = true;
+                // searchButton.interactable = true;
             }
         }
 
@@ -65,7 +65,7 @@ namespace CardDragging {
             joinMatchInput.interactable = false;
             joinButton.interactable = false;
             hostButton.interactable = false;
-            searchButton.interactable = false;
+            // searchButton.interactable = false;
 
             Player.localPlayer.JoinGame (joinMatchInput.text.ToUpper ());
         }
@@ -80,7 +80,7 @@ namespace CardDragging {
                 joinMatchInput.interactable = true;
                 joinButton.interactable = true;
                 hostButton.interactable = true;
-                searchButton.interactable = true;
+                // searchButton.interactable = true;
             }
         }
 
@@ -103,12 +103,12 @@ namespace CardDragging {
         }
 
         public void SearchGameSuccess (bool success) {
-            searchCanvas.enabled = false;
+            // searchCanvas.enabled = false;
             searching = false;
         }
 
         IEnumerator Searching () {
-            searchCanvas.enabled = true;
+            // searchCanvas.enabled = true;
             searching = true;
 
             float searchInterval = 1;
@@ -123,7 +123,7 @@ namespace CardDragging {
                 }
                 yield return null;
             }
-            searchCanvas.enabled = false;
+            // searchCanvas.enabled = false;
         }
 
     }

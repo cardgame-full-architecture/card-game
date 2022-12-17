@@ -11,7 +11,7 @@ GameObject:
   - component: {fileID: 4895240014894701964}
   - component: {fileID: 4895240014894701967}
   - component: {fileID: 4895240014894701966}
-  - component: {fileID: 4895240014894701961}
+  - component: {fileID: 4264795380050236559}
   m_Layer: 0
   m_Name: --- TurnManager
   m_TagString: Untagged
@@ -47,7 +47,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   sceneId: 0
   serverOnly: 0
-  m_AssetId: 
+  visible: 0
+  m_AssetId: ebdc92962da07844ab546d7603a3081c
   hasSpawned: 0
 --- !u!114 &4895240014894701966
 MonoBehaviour:
@@ -64,7 +65,7 @@ MonoBehaviour:
   syncMode: 0
   syncInterval: 0
   deck: {}
---- !u!114 &4895240014894701961
+--- !u!114 &4264795380050236559
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -73,9 +74,8 @@ MonoBehaviour:
   m_GameObject: {fileID: 4895240014894701960}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 1020a74962faada4b807ac5dc053a4cf, type: 3}
+  m_Script: {fileID: 11500000, guid: 5d17e718851449a6879986e45c458fb7, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   syncMode: 0
-  syncInterval: 0
-  currentMatchDebug: 
+  syncInterval: 0.1

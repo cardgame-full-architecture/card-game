@@ -44,7 +44,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   players: []
-  currentPlayer: {fileID: 0}
   currentPlayerIndex: 0
   gameInProgress: 1
   _imagesData: {fileID: 11400000, guid: 6322408266a8daa4480fd69c7203aa0d, type: 2}

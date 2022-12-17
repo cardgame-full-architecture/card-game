@@ -44,11 +44,11 @@ namespace CardDragging {
         }
 
         public void PlaceCardOnTable (Card card) {
+            Debug.Log("Card Placed");
             tableHand.Add (card);
             foreach (var player in players) {
                 player.PlacedCardOnTable (card);
             }
         }
-
     }
 }

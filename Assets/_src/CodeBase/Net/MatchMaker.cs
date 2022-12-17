@@ -36,6 +36,8 @@ namespace _src.CodeBase.Net {
         [SerializeField] GameObject turnManagerPrefab;
         [SerializeField] int maxMatchPlayers = 12;
 
+        public event Action<GameLogic.Player> OnPlayerDisconnected; 
+
         void Start () {
             instance = this;
         }
@@ -109,6 +111,10 @@ namespace _src.CodeBase.Net {
 
         public void BeginGame (string _matchID) {
             GameLogic.TurnManager turnManager = Instantiate (turnManagerPrefab).GetComponent<GameLogic.TurnManager> ();
+            // GameObject newTurnManager = Instantiate (turnManagerPrefab);
+            // NetworkServer.Spawn (newTurnManager);
+            // newTurnManager.GetComponent<NetworkMatch> ().matchId = _matchID.ToGuid ();
+            // TurnManager turnManager = newTurnManager.GetComponent<TurnManager> ();
 
             for (int i = 0; i < matches.Count; i++) {
                 if (matches[i].matchID == _matchID) {
@@ -122,7 +128,7 @@ namespace _src.CodeBase.Net {
                         players.Add(player);
                     }
                     
-                    turnManager.ManagePlayers(players);
+                    turnManager.ManagePlayers(players, this);
                     break;
                 }
             }
@@ -147,6 +153,7 @@ namespace _src.CodeBase.Net {
                 if (matches[i].matchID == _matchID) {
                     int playerIndex = matches[i].players.IndexOf (player);
                     matches[i].players.RemoveAt (playerIndex);
+                    OnPlayerDisconnected?.Invoke(player);
                     Debug.Log ($"Player disconnected from match {_matchID} | {matches[i].players.Count} players remaining");
 
                     if (matches[i].players.Count == 0) {
