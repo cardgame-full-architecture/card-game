@@ -46,8 +46,14 @@ namespace _src.CodeBase.UI
             if (playerName.Trim() == String.Empty)
                 return;
 
+            ActivateSearching();
 
             CreateRoomOnServer();
+        }
+
+        private void ActivateSearching()
+        {
+            _searchingCanvas.enabled = true;
         }
 
         private async void CreateRoomOnServer()
