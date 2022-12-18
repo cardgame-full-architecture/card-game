@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Security.Cryptography;
 using System.Text;
+using Assets.Scripts.Consul;
 using Mirror;
 using UnityEngine;
 
@@ -35,11 +36,17 @@ namespace _src.CodeBase.Net {
 
         [SerializeField] GameObject turnManagerPrefab;
         [SerializeField] int maxMatchPlayers = 12;
+        
+        
+        private ConsulClient _consulClient;
 
         public event Action<GameLogic.Player> OnPlayerDisconnected; 
 
         void Start () {
             instance = this;
+            
+            _consulClient = new ConsulClient();
+            
         }
 
         public bool HostGame(string _matchID, GameLogic.Player _player, bool publicMatch, out int playerIndex, string playerName) {
@@ -53,6 +60,10 @@ namespace _src.CodeBase.Net {
                 _player.currentMatch = match;
                 _player.PlayerName = playerName;
                 playerIndex = 1;
+
+                _consulClient.SetKV(_matchID, Encoding.UTF8.GetBytes("stay with me")).Wait();
+                // Debug.Log($"Add {_matchID} to key value on consul");
+                
                 return true;
             } else {
                 Debug.Log ($"Match ID already exists");
@@ -158,6 +169,7 @@ namespace _src.CodeBase.Net {
 
                     if (matches[i].players.Count == 0) {
                         Debug.Log ($"No more players in Match. Terminating {_matchID}");
+                        _consulClient.DeleteKV(_matchID).Wait();
                         matches.RemoveAt (i);
                         matchIDs.Remove (_matchID);
                     }

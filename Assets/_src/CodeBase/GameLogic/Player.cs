@@ -47,13 +47,15 @@ namespace _src.CodeBase.GameLogic {
 
 
         private List<VariantButton> _spawnedVariantButtons;
-        
+        private NetworkManager _networkManager;
+
 
         public bool myTurn { get; private set; }
 
         void Awake () {
             networkMatch = GetComponent<NetworkMatch> ();
             _spawnedVariantButtons = new List<VariantButton>();
+            _networkManager = FindObjectOfType<NetworkManager>();
         }
 
         private void Start()
@@ -148,6 +150,9 @@ namespace _src.CodeBase.GameLogic {
         /* 
             DISCONNECT
         */
+        
+        public void StopClient() => 
+            _networkManager.StopClient();
 
         public void DisconnectGame () {
             CmdDisconnectGame ();
@@ -230,32 +235,8 @@ namespace _src.CodeBase.GameLogic {
         }
 
         /*
-            TURN
-        */
-
-        public void SetTurn (bool _myTurn) {
-            myTurn = _myTurn; //Set myTurn on server
-            RpcSetTurn (_myTurn);
-        }
-
-        [ClientRpc]
-        void RpcSetTurn (bool _myTurn) {
-            Debug.Log ($"{(isLocalPlayer ? "localPlayer" : "other player")}'s turn.");
-
-            myTurn = _myTurn; //Set myTurn on clients
-        }
-
-        /*
             GAMEPLAY
         */
-
-        public void DoSomething () {
-            if (myTurn) { //Check that it is your turn
-                CmdDoSomething ();
-            } else {
-                Debug.Log ($"It is not your turn!");
-            }
-        }
 
         private void SendMessage()
         {
@@ -266,16 +247,6 @@ namespace _src.CodeBase.GameLogic {
             _sendButton.gameObject.SetActive(false);
             
             CmdSendMessage(message);
-        }
-
-        [Command]
-        void CmdDoSomething () {
-            RpcDoSomething ();
-        }
-
-        [ClientRpc]
-        void RpcDoSomething () {
-            Debug.Log ($"{(isLocalPlayer ? "localPlayer" : "other player")} is doing something.");
         }
 
         [TargetRpc]

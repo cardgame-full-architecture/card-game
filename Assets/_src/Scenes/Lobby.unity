@@ -871,7 +871,7 @@ MonoBehaviour:
     m_PersistentCalls:
       m_Calls:
       - m_Target: {fileID: 2091797237}
-        m_TargetAssemblyTypeName: 
+        m_TargetAssemblyTypeName: _src.CodeBase.UI.UILobby, Assembly-CSharp
         m_MethodName: DisconnectGame
         m_Mode: 1
         m_Arguments:
@@ -3014,7 +3014,7 @@ Canvas:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1798849067}
-  m_Enabled: 0
+  m_Enabled: 1
   serializedVersion: 3
   m_RenderMode: 2
   m_Camera: {fileID: 0}
@@ -3771,6 +3771,7 @@ GameObject:
   m_Component:
   - component: {fileID: 2091797236}
   - component: {fileID: 2091797237}
+  - component: {fileID: 2091797238}
   m_Layer: 0
   m_Name: --- UI
   m_TagString: Untagged
@@ -3820,6 +3821,19 @@ MonoBehaviour:
   UIPlayerPrefab: {fileID: 7081296984113890163, guid: 021708fea02a4714fb542a44449acfc3, type: 3}
   matchIDText: {fileID: 563400336}
   beginGameButton: {fileID: 55634903}
+--- !u!114 &2091797238
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2091797235}
+  m_Enabled: 0
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ddefcbbef5e849cfa3d313c165866baf, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _cancelButton: {fileID: 515676357}
 --- !u!1 &2144700037
 GameObject:
   m_ObjectHideFlags: 0

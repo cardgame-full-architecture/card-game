@@ -97,7 +97,11 @@ namespace _src.CodeBase.UI {
             }
         }
 
-        public void DisconnectGame () {
+        public void DisconnectGame ()
+        {
+            GameLogic.Player.localPlayer.StopClient();
+            return;
+            
             if (localPlayerLobbyUI != null) Destroy (localPlayerLobbyUI);
             GameLogic.Player.localPlayer.DisconnectGame ();
 
