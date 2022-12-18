@@ -49,9 +49,7 @@ namespace _src.CodeBase.GameLogic {
 
         private List<VariantButton> _spawnedVariantButtons;
         private NetworkManager _networkManager;
-
-
-        public bool myTurn { get; private set; }
+        
 
         void Awake () {
             networkMatch = GetComponent<NetworkMatch> ();
@@ -59,27 +57,8 @@ namespace _src.CodeBase.GameLogic {
             _networkManager = FindObjectOfType<NetworkManager>();
         }
 
-        private void Start()
-        {
+        private void Start() => 
             _sendButton.onClick.AddListener(SendMessage);
-
-            // if (PlayerPrefs.GetInt("IsHost") == 1)
-            //     StartCoroutine(Test2Routine());
-            // else
-            //     StartCoroutine(TestRoutine());
-        }
-
-        private IEnumerator Test2Routine()
-        {
-            yield return new WaitForSeconds(1);
-            UILobby.instance.HostPublic(PlayerPrefs.GetString("Name"));
-        }
-
-        private IEnumerator TestRoutine()
-        {
-            yield return new WaitForSeconds(1);
-            UILobby.instance.Join(PlayerPrefs.GetString("Name"), PlayerPrefs.GetString("RoomId"));
-        }
 
         public override void OnStartClient () {
             if (isLocalPlayer) {

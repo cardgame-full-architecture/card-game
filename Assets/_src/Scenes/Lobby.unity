@@ -990,7 +990,7 @@ MonoBehaviour:
     m_HorizontalOverflow: 0
     m_VerticalOverflow: 0
     m_LineSpacing: 1
-  m_Text: AS23G
+  m_Text: 
 --- !u!222 &563400337
 CanvasRenderer:
   m_ObjectHideFlags: 0

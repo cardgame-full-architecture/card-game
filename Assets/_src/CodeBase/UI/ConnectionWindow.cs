@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Data;
 using System.Text;
 using System.Threading.Tasks;
 using _src.CodeBase.GameLogic;
@@ -88,7 +89,6 @@ namespace _src.CodeBase.UI
             if (playerName.Trim() == String.Empty)
                 return;
 
-            ActivateSearching();
             
             PlayerPrefs.SetString("Name", playerName);
             PlayerPrefs.SetInt("IsHost", 1);
@@ -104,6 +104,14 @@ namespace _src.CodeBase.UI
         private async void CreateRoomOnServer()
         {
             string availableGameServerIp = await GetAvailableGameServerIp();
+
+            if (availableGameServerIp == String.Empty)
+            {
+                Debug.Log("Available server not exist");
+                return;
+            }
+            
+            ActivateSearching();
             
             Debug.Log($"Creating room on {availableGameServerIp}");
 
@@ -115,6 +123,10 @@ namespace _src.CodeBase.UI
         {
             ConsulClient consulClient = new ConsulClient();
             ServiceEntry[] activeServices = await consulClient.GetAliveServiceEntries("unityclient");
+
+            if (activeServices.Length <= 0)
+                return "";
+            
             return activeServices[Random.Range(0, activeServices.Length)].Node.Address;
         }
     }

@@ -91,6 +91,8 @@ namespace _src.CodeBase.UI {
                 localPlayerLobbyUI = SpawnPlayerUIPrefab (GameLogic.Player.localPlayer);
                 matchIDText.text = matchID;
                 beginGameButton.SetActive (true);
+
+                PlayerPrefs.SetString("RoomId", matchID);
             } else {
                 lobbySelectables.ForEach (x => x.interactable = true);
             }
