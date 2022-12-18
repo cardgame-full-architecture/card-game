@@ -407,7 +407,7 @@ namespace Assets.Scripts.Consul
                         {
                             CheckID = $"service:{Name}",
                             TCP = $"{ServiceAddress}:{CheckPort}",
-                            Interval = "10s"
+                            Interval = "3s"
                         }
                     })
                 )
