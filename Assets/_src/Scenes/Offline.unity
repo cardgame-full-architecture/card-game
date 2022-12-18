@@ -3006,6 +3006,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 6832b923705947ca93cafb03069fd46d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  _networkManager: {fileID: 1778308315}
   _playerNameInputField: {fileID: 993803601}
   _roomIdCodeInputField: {fileID: 1116120682}
   _joinButton: {fileID: 123158624}

@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Threading.Tasks;
 using Assets.Scripts.Consul;
+using Mirror;
 using UnityEngine;
 using UnityEngine.UI;
 using Random = UnityEngine.Random;
@@ -9,6 +10,10 @@ namespace _src.CodeBase.UI
 {
     public class ConnectionWindow : MonoBehaviour
     {
+        [SerializeField] 
+        private NetworkManager _networkManager;
+        
+        
         [SerializeField] 
         private InputField _playerNameInputField;
 
@@ -31,6 +36,10 @@ namespace _src.CodeBase.UI
 
         private void Start()
         {
+            if (Application.isBatchMode)
+                return;
+            
+            
             _joinButton.onClick.AddListener(OnClickJoinButton);
             _hostButton.onClick.AddListener(OnClickHostButton);
         }
@@ -47,6 +56,9 @@ namespace _src.CodeBase.UI
                 return;
 
             ActivateSearching();
+            
+            PlayerPrefs.SetString("Name", playerName);
+            PlayerPrefs.SetInt("IsHost", 1);
 
             CreateRoomOnServer();
         }
@@ -61,6 +73,9 @@ namespace _src.CodeBase.UI
             string availableGameServerIp = await GetAvailableGameServerIp();
             
             Debug.Log($"Creating room on {availableGameServerIp}");
+
+            _networkManager.networkAddress = availableGameServerIp;
+            _networkManager.StartClient();
         }
 
         private async Task<string> GetAvailableGameServerIp()

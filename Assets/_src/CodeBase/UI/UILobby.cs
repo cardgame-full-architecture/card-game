@@ -40,6 +40,16 @@ namespace _src.CodeBase.UI {
 
             GameLogic.Player.localPlayer.HostGame (true, playerName);
         }
+        
+        public void HostPublic (string playerName)
+        {
+            if (playerName.Trim() == String.Empty)
+                return;
+            
+            lobbySelectables.ForEach (x => x.interactable = false);
+
+            GameLogic.Player.localPlayer.HostGame (true, playerName);
+        }
 
         public void HostPrivate ()
         {

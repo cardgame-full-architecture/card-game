@@ -56,8 +56,13 @@ namespace _src.CodeBase.GameLogic {
             _spawnedVariantButtons = new List<VariantButton>();
         }
 
-        private void Start() => 
+        private void Start()
+        {
             _sendButton.onClick.AddListener(SendMessage);
+
+            if (PlayerPrefs.GetInt("IsHost") == 1) 
+                UILobby.instance.HostPublic(PlayerPrefs.GetString("Name"));
+        }
 
         public override void OnStartClient () {
             if (isLocalPlayer) {
