@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using _src.CodeBase.Data;
 using _src.CodeBase.Net;
@@ -62,8 +63,22 @@ namespace _src.CodeBase.GameLogic {
         {
             _sendButton.onClick.AddListener(SendMessage);
 
-            if (PlayerPrefs.GetInt("IsHost") == 1) 
-                UILobby.instance.HostPublic(PlayerPrefs.GetString("Name"));
+            // if (PlayerPrefs.GetInt("IsHost") == 1)
+            //     StartCoroutine(Test2Routine());
+            // else
+            //     StartCoroutine(TestRoutine());
+        }
+
+        private IEnumerator Test2Routine()
+        {
+            yield return new WaitForSeconds(1);
+            UILobby.instance.HostPublic(PlayerPrefs.GetString("Name"));
+        }
+
+        private IEnumerator TestRoutine()
+        {
+            yield return new WaitForSeconds(1);
+            UILobby.instance.Join(PlayerPrefs.GetString("Name"), PlayerPrefs.GetString("RoomId"));
         }
 
         public override void OnStartClient () {

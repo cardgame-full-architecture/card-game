@@ -28,6 +28,21 @@ namespace _src.CodeBase.UI {
 
         void Start () {
             instance = this;
+            
+            if (Application.isBatchMode)
+                return;
+            
+            StartCoroutine(StartLobbyRoutine());
+        }
+
+        private IEnumerator StartLobbyRoutine()
+        {
+            yield return new WaitForSeconds(1);
+            
+            if (PlayerPrefs.GetInt("IsHost") == 1)
+                HostPublic(PlayerPrefs.GetString("Name"));
+            else
+                Join(PlayerPrefs.GetString("Name"), PlayerPrefs.GetString("RoomId"));
         }
 
         public void HostPublic ()
@@ -45,7 +60,7 @@ namespace _src.CodeBase.UI {
         {
             if (playerName.Trim() == String.Empty)
                 return;
-            
+
             lobbySelectables.ForEach (x => x.interactable = false);
 
             GameLogic.Player.localPlayer.HostGame (true, playerName);
@@ -83,6 +98,12 @@ namespace _src.CodeBase.UI {
             lobbySelectables.ForEach (x => x.interactable = false);
 
             GameLogic.Player.localPlayer.JoinGame (joinMatchInput.text.ToUpper (), playerName);
+        }
+        
+        public void Join (string playerName, string roomId) {
+            lobbySelectables.ForEach (x => x.interactable = false);
+
+            GameLogic.Player.localPlayer.JoinGame (roomId.ToUpper(), playerName);
         }
 
         public void JoinSuccess (bool success, string matchID) {

@@ -10,6 +10,11 @@ namespace _src.CodeBase.GameLogic
 
         public List<ClientData> ClientDatas;
 
+        public GameStateData()
+        {
+            
+        }
+
         public GameStateData(string serverAddress, List<Player> players)
         {
             ServerIp = serverAddress;

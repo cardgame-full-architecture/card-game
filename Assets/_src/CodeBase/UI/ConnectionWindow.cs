@@ -1,7 +1,10 @@
 ﻿using System;
+using System.Text;
 using System.Threading.Tasks;
+using _src.CodeBase.GameLogic;
 using Assets.Scripts.Consul;
 using Mirror;
+using Newtonsoft.Json;
 using UnityEngine;
 using UnityEngine.UI;
 using Random = UnityEngine.Random;
@@ -46,7 +49,37 @@ namespace _src.CodeBase.UI
 
         private void OnClickJoinButton()
         {
+            string playerName = _playerNameInputField.text;
+            string roomId = _roomIdCodeInputField.text.ToUpper();
             
+            if (playerName.Trim() == String.Empty || roomId.Trim() == String.Empty)
+                return;
+            
+            
+            PlayerPrefs.SetString("Name", playerName);
+            PlayerPrefs.SetInt("IsHost", 0);
+            PlayerPrefs.SetString("RoomId", roomId);
+
+            JoinToNeededServer(roomId);
+        }
+
+        private async void JoinToNeededServer(string roomId)
+        {
+            ConsulClient consulClient = new ConsulClient();
+            KVPair kvPair = await consulClient.GetKV(roomId);
+            
+            if (kvPair == null)
+                return;
+            
+            ActivateSearching();
+            
+            GameStateData gameStateData = JsonConvert.DeserializeObject<GameStateData>(Encoding.UTF8.GetString(kvPair.Value));
+            
+            Debug.Log($"Connecting to {roomId} on {gameStateData.ServerIp} address");
+            
+            _networkManager.networkAddress = gameStateData.ServerIp;
+            _networkManager.StartClient();
+            // Debug.Log($"{res.Key}: {Encoding.UTF8.GetString(res.Value)}");
         }
 
         private void OnClickHostButton()

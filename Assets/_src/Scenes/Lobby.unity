@@ -141,7 +141,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!224 &55634904
 RectTransform:
   m_ObjectHideFlags: 0
@@ -3771,7 +3771,6 @@ GameObject:
   m_Component:
   - component: {fileID: 2091797236}
   - component: {fileID: 2091797237}
-  - component: {fileID: 2091797238}
   m_Layer: 0
   m_Name: --- UI
   m_TagString: Untagged
@@ -3821,19 +3820,6 @@ MonoBehaviour:
   UIPlayerPrefab: {fileID: 7081296984113890163, guid: 021708fea02a4714fb542a44449acfc3, type: 3}
   matchIDText: {fileID: 563400336}
   beginGameButton: {fileID: 55634903}
---- !u!114 &2091797238
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 2091797235}
-  m_Enabled: 0
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: ddefcbbef5e849cfa3d313c165866baf, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  _cancelButton: {fileID: 515676357}
 --- !u!1 &2144700037
 GameObject:
   m_ObjectHideFlags: 0
