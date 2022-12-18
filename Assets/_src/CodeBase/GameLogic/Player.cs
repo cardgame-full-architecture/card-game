@@ -140,11 +140,36 @@ namespace _src.CodeBase.GameLogic {
             Debug.Log ($"MatchID: {matchID} == {_matchID}");
             UILobby.instance.JoinSuccess (success, _matchID);
         }
+        
+        /*
+            JoinGameWithHost
+        */
+
+        public void JoinGameWithHost(string matchId, string playerName)
+        {
+            CmdJoinGameWithHost(matchId, playerName, PlayerPrefs.GetString("GameData"));
+        }
+
+        [Command]
+        private void CmdJoinGameWithHost(string matchId, string playerName, string gameData)
+        {
+            matchID = matchId;
+            if (MatchMaker.instance.JoinGameWithHost(matchId, this, out playerIndex, playerName, gameData)) {
+                Debug.Log ($"<color=green>Game Joined successfully</color>");
+                networkMatch.matchId = matchId.ToGuid ();
+                TargetJoinGame (true, matchId, playerIndex, playerName);
+            } else {
+                Debug.Log ($"<color=red>Game Joined failed</color>");
+                TargetJoinGame (false, matchId, playerIndex, playerName);
+            }
+        }
+
 
         /* 
             DISCONNECT
         */
-        
+
+
         public void StopClient() => 
             _networkManager.StopClient();
 
@@ -178,6 +203,7 @@ namespace _src.CodeBase.GameLogic {
             SEARCH MATCH
         */
 
+
         public void SearchGame () {
             CmdSearchGame ();
         }
@@ -206,6 +232,7 @@ namespace _src.CodeBase.GameLogic {
             BEGIN MATCH
         */
 
+
         public void BeginGame () {
             CmdBeginGame ();
         }
@@ -231,6 +258,7 @@ namespace _src.CodeBase.GameLogic {
         /*
             GAMEPLAY
         */
+
 
         private void SendMessage()
         {

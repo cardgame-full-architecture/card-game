@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections;
 using System.Data;
 using System.Text;
 using System.Threading.Tasks;
@@ -54,9 +55,19 @@ namespace _src.CodeBase.UI
             if (await CheckRoomAvailable() is GameStateData gameStateData)
             {
                 _connectionPanel.gameObject.SetActive(false);
-                
-                
+
+                StartCoroutine(ConnectWithDelay(gameStateData));
             }
+        }
+
+        private IEnumerator ConnectWithDelay(GameStateData gameStateData)
+        {
+            yield return new WaitForSeconds(5);
+            
+            PlayerPrefs.SetInt("IsCrashed", 1);
+            PlayerPrefs.SetString("GameData", JsonConvert.SerializeObject(gameStateData));
+                
+            JoinToNeededServer(PlayerPrefs.GetString("RoomId"));
         }
 
         private async Task<GameStateData> CheckRoomAvailable()
@@ -72,6 +83,8 @@ namespace _src.CodeBase.UI
                 return null;
 
             gameStateData = JsonConvert.DeserializeObject<GameStateData>(Encoding.UTF8.GetString(kvPair.Value));
+            
+            Debug.Log($"ip in new server {gameStateData.ServerIp}. First user {gameStateData.ClientDatas[0].Score}");
             
             return gameStateData;
         }

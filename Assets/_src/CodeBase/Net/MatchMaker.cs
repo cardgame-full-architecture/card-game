@@ -17,13 +17,22 @@ namespace _src.CodeBase.Net {
         public bool inMatch;
         public bool matchFull;
         public List<GameLogic.Player> players = new List<GameLogic.Player> ();
+        public string gameData;
 
-        public Match (string matchID, GameLogic.Player player, bool publicMatch) {
+        public Match(string matchID, GameLogic.Player player, bool publicMatch, string gameData = "") {
             matchFull = false;
             inMatch = false;
             this.matchID = matchID;
             this.publicMatch = publicMatch;
             players.Add (player);
+            this.gameData = gameData;
+        }
+        
+
+        public Match (string matchID) {
+            matchFull = false;
+            inMatch = false;
+            this.matchID = matchID;
         }
 
         public Match () { }
@@ -107,37 +116,48 @@ namespace _src.CodeBase.Net {
             }
         }
         
-        // public bool JoinGame(string _matchID, GameLogic.Player player, out int playerIndex, string playerName) {
-        //     playerIndex = -1;
-        //
-        //     if (matchIDs.Contains (_matchID)) {
-        //
-        //         for (int i = 0; i < matches.Count; i++) {
-        //             if (matches[i].matchID == _matchID) {
-        //                 if (!matches[i].inMatch && !matches[i].matchFull) {
-        //                     matches[i].players.Add (player);
-        //                     player.currentMatch = matches[i];
-        //                     player.PlayerName = playerName;
-        //                     playerIndex = matches[i].players.Count;
-        //
-        //                     if (matches[i].players.Count == maxMatchPlayers) {
-        //                         matches[i].matchFull = true;
-        //                     }
-        //
-        //                     break;
-        //                 } else {
-        //                     return false;
-        //                 }
-        //             }
-        //         }
-        //
-        //         Debug.Log ($"Match joined");
-        //         return true;
-        //     } else {
-        //         Debug.Log ($"Match ID does not exist");
-        //         return false;
-        //     }
-        // }
+        public bool JoinGameWithHost(string _matchID, GameLogic.Player player, out int playerIndex, string playerName, string gameData) {
+            playerIndex = -1;
+
+            if (!matchIDs.Contains(_matchID))
+            {
+                matchIDs.Add (_matchID);
+                Match match = new Match (_matchID, player, true, gameData);
+                matches.Add (match);
+                Debug.Log ($"Match {_matchID} generated");
+                player.currentMatch = match;
+                player.PlayerName = playerName;
+                playerIndex = 1;
+
+                // _consulClient.SetKV(_matchID, Encoding.UTF8.GetBytes(JsonConvert.SerializeObject(new GameStateData(_networkManager.networkAddress, new List<GameLogic.Player>())))).Wait();
+                
+                return true;
+            }
+            else
+            {
+                for (int i = 0; i < matches.Count; i++) {
+                    if (matches[i].matchID == _matchID) {
+                        if (!matches[i].inMatch && !matches[i].matchFull) {
+                            matches[i].players.Add (player);
+                            player.currentMatch = matches[i];
+                            player.PlayerName = playerName;
+                            playerIndex = matches[i].players.Count;
+
+                            if (matches[i].players.Count == maxMatchPlayers) {
+                                matches[i].matchFull = true;
+                            }
+
+                            break;
+                        } else {
+                            return false;
+                        }
+                    }
+                }
+
+                Debug.Log ($"Match joined");
+                return true;
+            }
+        }
 
         public bool SearchGame (GameLogic.Player _player, out int playerIndex, out string matchID) {
             playerIndex = -1;
@@ -175,7 +195,7 @@ namespace _src.CodeBase.Net {
                         players.Add(player);
                     }
                     
-                    turnManager.ManagePlayers(players, this, _matchID, _networkManager.networkAddress);
+                    turnManager.ManagePlayers(players, this, _matchID, _networkManager.networkAddress, matches[i].gameData);
                     break;
                 }
             }

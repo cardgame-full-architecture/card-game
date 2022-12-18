@@ -44,11 +44,22 @@ namespace _src.CodeBase.UI {
         private IEnumerator StartLobbyRoutine()
         {
             yield return new WaitForSeconds(1);
-            
-            if (PlayerPrefs.GetInt("IsHost") == 1)
+
+            if (PlayerPrefs.GetInt("IsCrashed") == 1)
+                JoinGameWithHost(PlayerPrefs.GetString("Name"), PlayerPrefs.GetString("RoomId"));
+            else if (PlayerPrefs.GetInt("IsHost") == 1)
                 HostPublic(PlayerPrefs.GetString("Name"));
             else
                 Join(PlayerPrefs.GetString("Name"), PlayerPrefs.GetString("RoomId"));
+        }
+
+        private void JoinGameWithHost(string playerName, string roomId)
+        {
+            PlayerPrefs.SetInt("IsCrashed", 0);
+            
+            lobbySelectables.ForEach (x => x.interactable = false);
+
+            GameLogic.Player.localPlayer.JoinGameWithHost (roomId, playerName);
         }
 
         public void HostPublic ()
@@ -130,6 +141,7 @@ namespace _src.CodeBase.UI {
         {
             PlayerPrefs.SetString("Name", "");
             PlayerPrefs.SetString("RoomId", "");
+            PlayerPrefs.SetInt("IsCrashed", 0);
             GameLogic.Player.localPlayer.StopClient();
             return;
             

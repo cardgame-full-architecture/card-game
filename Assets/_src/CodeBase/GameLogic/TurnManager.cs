@@ -1,4 +1,5 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -52,6 +53,61 @@ namespace _src.CodeBase.GameLogic {
             _consulClient.SetKV(_matchId, Encoding.UTF8.GetBytes(JsonConvert.SerializeObject(_gameStateData))).Wait();
 
             StartCoroutine(GameLoopRoutine());
+        }
+        
+        public void ManagePlayers(List<Player> _players, MatchMaker matchMaker, string matchId, string serverAddress, string gameData)
+        {
+            players = _players;
+            _matchId = matchId;
+
+            _matchMaker = matchMaker;
+            _matchMaker.OnPlayerDisconnected += OnPlayerDisconnected;
+
+
+            if (gameData == String.Empty)
+            {
+                _gameStateData = new GameStateData(serverAddress, _players);
+                _consulClient = new ConsulClient();
+                _consulClient.SetKV(_matchId, Encoding.UTF8.GetBytes(JsonConvert.SerializeObject(_gameStateData))).Wait();
+            }
+            else
+            {
+                _gameStateData = JsonConvert.DeserializeObject<GameStateData>(gameData);
+                StartCoroutine(InitializeDataRoutine());
+            }
+
+            _consulClient = new ConsulClient();
+            _consulClient.SetKV(_matchId, Encoding.UTF8.GetBytes(JsonConvert.SerializeObject(_gameStateData))).Wait();
+
+            StartCoroutine(GameLoopRoutine());
+        }
+
+        private IEnumerator InitializeDataRoutine()
+        {
+            yield return new WaitForSeconds(2);
+
+
+            foreach (Player player in players)
+            {
+                int score = 0;
+                foreach (ClientData clientData in _gameStateData.ClientDatas)
+                {
+                    if (clientData.Name == player.PlayerName) 
+                        score = clientData.Score;
+                }
+                
+                _playersScores.Add(player, score);   
+            }
+
+            foreach (Player player in players)
+            {
+                foreach (ClientData clientData in _gameStateData.ClientDatas)
+                {
+                    if (clientData.Name == player.PlayerName)
+                        player.UpdateScore(clientData.Score);
+                    
+                }
+            }   
         }
 
         public void OnMessageSent(Player player, string message)
