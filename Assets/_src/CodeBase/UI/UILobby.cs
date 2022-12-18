@@ -35,6 +35,12 @@ namespace _src.CodeBase.UI {
             StartCoroutine(StartLobbyRoutine());
         }
 
+        private void Update()
+        {
+            if (Input.GetKeyDown(KeyCode.Escape))
+                DisconnectGame();
+        }
+
         private IEnumerator StartLobbyRoutine()
         {
             yield return new WaitForSeconds(1);

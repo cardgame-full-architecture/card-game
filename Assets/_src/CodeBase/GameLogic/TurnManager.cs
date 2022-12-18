@@ -1,5 +1,6 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using System.Text;
 using _src.CodeBase.Data;
 using _src.CodeBase.Net;
@@ -27,6 +28,7 @@ namespace _src.CodeBase.GameLogic {
         private Dictionary<Player, int> _playersScores;
 
         private GameStateData _gameStateData;
+        private string _matchId;
 
         void Start () {
             instance = this;
@@ -40,13 +42,14 @@ namespace _src.CodeBase.GameLogic {
         public void ManagePlayers(List<Player> _players, MatchMaker matchMaker, string matchId, string serverAddress) 
         {
             players = _players;
+            _matchId = matchId;
 
             _matchMaker = matchMaker;
             _matchMaker.OnPlayerDisconnected += OnPlayerDisconnected;
 
             _gameStateData = new GameStateData(serverAddress, _players);
             _consulClient = new ConsulClient();
-            _consulClient.SetKV(matchId, Encoding.UTF8.GetBytes(JsonConvert.SerializeObject(_gameStateData))).Wait();
+            _consulClient.SetKV(_matchId, Encoding.UTF8.GetBytes(JsonConvert.SerializeObject(_gameStateData))).Wait();
 
             StartCoroutine(GameLoopRoutine());
         }
@@ -136,6 +139,20 @@ namespace _src.CodeBase.GameLogic {
                 else
                     player.UpdateScore(0);
             }
+
+            foreach (ClientData clientData in _gameStateData.ClientDatas)
+            {
+                foreach (KeyValuePair<Player,int> playersScore in _playersScores)
+                {
+                    if (playersScore.Key.PlayerName == clientData.Name) 
+                        clientData.Score = playersScore.Value;
+                }
+            }
+            
+            if (players.Count <= 0)
+                yield break;
+            
+            _consulClient.SetKV(_matchId, Encoding.UTF8.GetBytes(JsonConvert.SerializeObject(_gameStateData))).Wait();
         }
 
         private void OnPlayerDisconnected(Player player)
