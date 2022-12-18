@@ -53,24 +53,15 @@ namespace _src.CodeBase.UI
             _joinButton.onClick.AddListener(OnClickJoinButton);
             _hostButton.onClick.AddListener(OnClickHostButton);
 
-            StartCoroutine(TestRoutine());
-        }
-
-        private IEnumerator TestRoutine()
-        {
             for (int i = 0; i < 3; i++)
             {
-                Debug.Log("try connect");
-                if (CheckRoomAvailable().GetAwaiter().GetResult() is GameStateData gameStateData)
+                if (await CheckRoomAvailable() is GameStateData gameStateData)
                 {
                     _connectionPanel.gameObject.SetActive(false);
 
-                    yield return StartCoroutine(ConnectWithDelay(gameStateData));
-                }     
+                    StartCoroutine(ConnectWithDelay(gameStateData));
+                }   
             }
-            
-            _connectionPanel.gameObject.SetActive(true);
-            _searchingCanvas.enabled = false;
         }
 
         // private async void OnClientDisconnected(int obj)
@@ -87,7 +78,7 @@ namespace _src.CodeBase.UI
 
         private IEnumerator ConnectWithDelay(GameStateData gameStateData)
         {
-            yield return new WaitForSeconds(7);
+            yield return new WaitForSeconds(13);
             
             PlayerPrefs.SetInt("IsCrashed", 1);
             PlayerPrefs.SetString("GameData", JsonConvert.SerializeObject(gameStateData));
