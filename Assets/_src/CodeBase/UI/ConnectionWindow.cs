@@ -5,6 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using _src.CodeBase.GameLogic;
 using Assets.Scripts.Consul;
+using kcp2k;
 using Mirror;
 using Newtonsoft.Json;
 using UnityEngine;
@@ -52,22 +53,46 @@ namespace _src.CodeBase.UI
             _joinButton.onClick.AddListener(OnClickJoinButton);
             _hostButton.onClick.AddListener(OnClickHostButton);
 
-            if (await CheckRoomAvailable() is GameStateData gameStateData)
-            {
-                _connectionPanel.gameObject.SetActive(false);
-
-                StartCoroutine(ConnectWithDelay(gameStateData));
-            }
+            StartCoroutine(TestRoutine());
         }
+
+        private IEnumerator TestRoutine()
+        {
+            for (int i = 0; i < 3; i++)
+            {
+                Debug.Log("try connect");
+                if (CheckRoomAvailable().GetAwaiter().GetResult() is GameStateData gameStateData)
+                {
+                    _connectionPanel.gameObject.SetActive(false);
+
+                    yield return StartCoroutine(ConnectWithDelay(gameStateData));
+                }     
+            }
+            
+            _connectionPanel.gameObject.SetActive(true);
+            _searchingCanvas.enabled = false;
+        }
+
+        // private async void OnClientDisconnected(int obj)
+        // {
+        //     Debug.Log("DISCONNECTED");
+        //     
+        //     if (await CheckRoomAvailable() is GameStateData gameStateData)
+        //     {
+        //         _connectionPanel.gameObject.SetActive(false);
+        //
+        //         StartCoroutine(ConnectWithDelay(gameStateData));
+        //     }
+        // }
 
         private IEnumerator ConnectWithDelay(GameStateData gameStateData)
         {
-            yield return new WaitForSeconds(5);
+            yield return new WaitForSeconds(7);
             
             PlayerPrefs.SetInt("IsCrashed", 1);
             PlayerPrefs.SetString("GameData", JsonConvert.SerializeObject(gameStateData));
                 
-            JoinToNeededServer(PlayerPrefs.GetString("RoomId"));
+            JoinToNeededServer(PlayerPrefs.GetString("RoomId"), gameStateData.ServerIp);
         }
 
         private async Task<GameStateData> CheckRoomAvailable()
@@ -105,7 +130,7 @@ namespace _src.CodeBase.UI
             JoinToNeededServer(roomId);
         }
 
-        private async void JoinToNeededServer(string roomId)
+        private async void JoinToNeededServer(string roomId, string serverIp = "")
         {
             ConsulClient consulClient = new ConsulClient();
             KVPair kvPair = await consulClient.GetKV(roomId);
@@ -165,7 +190,7 @@ namespace _src.CodeBase.UI
             ConsulClient consulClient = new ConsulClient();
             ServiceEntry[] activeServices = await consulClient.GetAliveServiceEntries("unityclient");
 
-            if (activeServices.Length <= 0)
+            if (activeServices == null || activeServices.Length <= 0)
                 return "";
             
             return activeServices[Random.Range(0, activeServices.Length)].Node.Address;
