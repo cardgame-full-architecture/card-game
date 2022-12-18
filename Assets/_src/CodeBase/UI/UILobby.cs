@@ -128,6 +128,8 @@ namespace _src.CodeBase.UI {
 
         public void DisconnectGame ()
         {
+            PlayerPrefs.SetString("Name", "");
+            PlayerPrefs.SetString("RoomId", "");
             GameLogic.Player.localPlayer.StopClient();
             return;
             

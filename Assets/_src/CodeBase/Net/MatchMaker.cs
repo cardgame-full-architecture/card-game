@@ -106,6 +106,38 @@ namespace _src.CodeBase.Net {
                 return false;
             }
         }
+        
+        // public bool JoinGame(string _matchID, GameLogic.Player player, out int playerIndex, string playerName) {
+        //     playerIndex = -1;
+        //
+        //     if (matchIDs.Contains (_matchID)) {
+        //
+        //         for (int i = 0; i < matches.Count; i++) {
+        //             if (matches[i].matchID == _matchID) {
+        //                 if (!matches[i].inMatch && !matches[i].matchFull) {
+        //                     matches[i].players.Add (player);
+        //                     player.currentMatch = matches[i];
+        //                     player.PlayerName = playerName;
+        //                     playerIndex = matches[i].players.Count;
+        //
+        //                     if (matches[i].players.Count == maxMatchPlayers) {
+        //                         matches[i].matchFull = true;
+        //                     }
+        //
+        //                     break;
+        //                 } else {
+        //                     return false;
+        //                 }
+        //             }
+        //         }
+        //
+        //         Debug.Log ($"Match joined");
+        //         return true;
+        //     } else {
+        //         Debug.Log ($"Match ID does not exist");
+        //         return false;
+        //     }
+        // }
 
         public bool SearchGame (GameLogic.Player _player, out int playerIndex, out string matchID) {
             playerIndex = -1;
@@ -173,7 +205,7 @@ namespace _src.CodeBase.Net {
 
                     if (matches[i].players.Count == 0) {
                         Debug.Log ($"No more players in Match. Terminating {_matchID}");
-                        _consulClient.DeleteKV(_matchID).Wait();
+                        // _consulClient.DeleteKV(_matchID).Wait();
                         matches.RemoveAt (i);
                         matchIDs.Remove (_matchID);
                     }

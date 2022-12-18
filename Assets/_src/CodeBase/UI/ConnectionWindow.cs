@@ -16,6 +16,10 @@ namespace _src.CodeBase.UI
     {
         [SerializeField] 
         private NetworkManager _networkManager;
+
+
+        [SerializeField] 
+        private Transform _connectionPanel;
         
         
         [SerializeField] 
@@ -38,7 +42,7 @@ namespace _src.CodeBase.UI
         private Canvas _searchingCanvas;
 
 
-        private void Start()
+        private async void Start()
         {
             if (Application.isBatchMode)
                 return;
@@ -46,6 +50,30 @@ namespace _src.CodeBase.UI
             
             _joinButton.onClick.AddListener(OnClickJoinButton);
             _hostButton.onClick.AddListener(OnClickHostButton);
+
+            if (await CheckRoomAvailable() is GameStateData gameStateData)
+            {
+                _connectionPanel.gameObject.SetActive(false);
+                
+                
+            }
+        }
+
+        private async Task<GameStateData> CheckRoomAvailable()
+        {
+            GameStateData gameStateData;
+            
+            string roomId = PlayerPrefs.GetString("RoomId");
+            
+            ConsulClient consulClient = new ConsulClient();
+            KVPair kvPair = await consulClient.GetKV(roomId);
+            
+            if (kvPair == null)
+                return null;
+
+            gameStateData = JsonConvert.DeserializeObject<GameStateData>(Encoding.UTF8.GetString(kvPair.Value));
+            
+            return gameStateData;
         }
 
         private void OnClickJoinButton()

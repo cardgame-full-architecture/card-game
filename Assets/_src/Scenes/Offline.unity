@@ -3007,6 +3007,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _networkManager: {fileID: 1778308315}
+  _connectionPanel: {fileID: 260621833}
   _playerNameInputField: {fileID: 993803601}
   _roomIdCodeInputField: {fileID: 1116120682}
   _joinButton: {fileID: 123158624}
