@@ -10,11 +10,11 @@ namespace _src.CodeBase.Net {
 
         async void Start () {
             if (!Application.isBatchMode) { //Headless build
-                Debug.Log ($"=== Client Build ===");
-
-                ConsulClient consulClient = new ConsulClient();
-                foreach (ServiceEntry item in await consulClient.GetAliveServiceEntries("unityclient"))
-                    Debug.Log($"{item.Node.Name}: {item.Node.Address}, {item.Service.Address}");
+                // Debug.Log ($"=== Client Build ===");
+                //
+                // ConsulClient consulClient = new ConsulClient();
+                // foreach (ServiceEntry item in await consulClient.GetAliveServiceEntries("unityclient"))
+                //     Debug.Log($"{item.Node.Name}: {item.Node.Address}, {item.Service.Address}");
                 
                 // networkManager.StartClient ();
             } else {
