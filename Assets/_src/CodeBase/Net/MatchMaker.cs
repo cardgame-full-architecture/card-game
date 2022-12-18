@@ -2,8 +2,10 @@
 using System.Collections.Generic;
 using System.Security.Cryptography;
 using System.Text;
+using _src.CodeBase.GameLogic;
 using Assets.Scripts.Consul;
 using Mirror;
+using Newtonsoft.Json;
 using UnityEngine;
 
 namespace _src.CodeBase.Net {
@@ -39,6 +41,7 @@ namespace _src.CodeBase.Net {
         
         
         private ConsulClient _consulClient;
+        private NetworkManager _networkManager;
 
         public event Action<GameLogic.Player> OnPlayerDisconnected; 
 
@@ -46,7 +49,8 @@ namespace _src.CodeBase.Net {
             instance = this;
             
             _consulClient = new ConsulClient();
-            
+
+            _networkManager = FindObjectOfType<NetworkManager>();
         }
 
         public bool HostGame(string _matchID, GameLogic.Player _player, bool publicMatch, out int playerIndex, string playerName) {
@@ -61,7 +65,7 @@ namespace _src.CodeBase.Net {
                 _player.PlayerName = playerName;
                 playerIndex = 1;
 
-                _consulClient.SetKV(_matchID, Encoding.UTF8.GetBytes("stay with me")).Wait();
+                _consulClient.SetKV(_matchID, Encoding.UTF8.GetBytes(JsonConvert.SerializeObject(new GameStateData(_networkManager.networkAddress, new List<GameLogic.Player>())))).Wait();
                 // Debug.Log($"Add {_matchID} to key value on consul");
                 
                 return true;
@@ -139,7 +143,7 @@ namespace _src.CodeBase.Net {
                         players.Add(player);
                     }
                     
-                    turnManager.ManagePlayers(players, this);
+                    turnManager.ManagePlayers(players, this, _matchID, _networkManager.networkAddress);
                     break;
                 }
             }

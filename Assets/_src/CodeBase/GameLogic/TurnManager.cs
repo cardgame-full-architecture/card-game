@@ -1,7 +1,10 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
+using System.Text;
 using _src.CodeBase.Data;
 using _src.CodeBase.Net;
+using Assets.Scripts.Consul;
+using Newtonsoft.Json;
 using UnityEngine;
 using Random = UnityEngine.Random;
 
@@ -15,12 +18,15 @@ namespace _src.CodeBase.GameLogic {
 
         public static TurnManager instance;
         private MatchMaker _matchMaker;
+        private ConsulClient _consulClient;
         
         private int _countOfAnsweredUsers;
         private Dictionary<Player, string> _playersMessages;
 
         private int _countOfUsersVotes;
         private Dictionary<Player, int> _playersScores;
+
+        private GameStateData _gameStateData;
 
         void Start () {
             instance = this;
@@ -31,11 +37,16 @@ namespace _src.CodeBase.GameLogic {
             _matchMaker.OnPlayerDisconnected -= OnPlayerDisconnected;
         }
 
-        public void ManagePlayers (List<Player> _players, MatchMaker matchMaker) {
+        public void ManagePlayers(List<Player> _players, MatchMaker matchMaker, string matchId, string serverAddress) 
+        {
             players = _players;
 
             _matchMaker = matchMaker;
             _matchMaker.OnPlayerDisconnected += OnPlayerDisconnected;
+
+            _gameStateData = new GameStateData(serverAddress, _players);
+            _consulClient = new ConsulClient();
+            _consulClient.SetKV(matchId, Encoding.UTF8.GetBytes(JsonConvert.SerializeObject(_gameStateData))).Wait();
 
             StartCoroutine(GameLoopRoutine());
         }
